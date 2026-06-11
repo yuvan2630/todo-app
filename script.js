@@ -1,81 +1,81 @@
-let currentPlayer = "X";
-let board = ["", "", "", "", "", "", "", "", ""];
-let gameOver = false;
+let taskList = document.getElementById("taskList");
 
-const winPatterns = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-];
+// Load saved tasks
+window.onload = function () {
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-function play(index) {
+    tasks.forEach(task => {
+        createTask(task.text, task.completed);
+    });
+};
 
-    if (board[index] !== "" || gameOver) {
+function addTask() {
+
+    let input = document.getElementById("taskInput");
+    let task = input.value.trim();
+
+    if (task === "") {
+        alert("Enter a task");
         return;
     }
 
-    board[index] = currentPlayer;
+    createTask(task, false);
 
-    document.getElementsByClassName("cell")[index].innerHTML =
-        currentPlayer;
+    saveTasks();
 
-    if (checkWinner()) {
-        document.getElementById("status").innerHTML =
-            "Player " + currentPlayer + " Wins!";
-        gameOver = true;
-        return;
-    }
-
-    if (board.every(cell => cell !== "")) {
-        document.getElementById("status").innerHTML =
-            "It's a Draw!";
-        gameOver = true;
-        return;
-    }
-
-    currentPlayer = currentPlayer === "X" ? "O" : "X";
-
-    document.getElementById("status").innerHTML =
-        "Player " + currentPlayer + " Turn";
+    input.value = "";
 }
 
-function checkWinner() {
+function createTask(taskText, completed) {
 
-    for (let pattern of winPatterns) {
+    let li = document.createElement("li");
 
-        let a = pattern[0];
-        let b = pattern[1];
-        let c = pattern[2];
+    let span = document.createElement("span");
+    span.textContent = taskText;
 
-        if (
-            board[a] &&
-            board[a] === board[b] &&
-            board[a] === board[c]
-        ) {
-            return true;
+    if (completed) {
+        span.style.textDecoration = "line-through";
+    }
+
+    span.onclick = function () {
+        if (span.style.textDecoration === "line-through") {
+            span.style.textDecoration = "none";
+        } else {
+            span.style.textDecoration = "line-through";
         }
-    }
+        saveTasks();
+    };
 
-    return false;
+    let deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+
+    deleteBtn.onclick = function () {
+        li.remove();
+        saveTasks();
+    };
+
+    li.appendChild(span);
+    li.appendChild(deleteBtn);
+
+    taskList.appendChild(li);
 }
 
-function restartGame() {
+function saveTasks() {
 
-    board = ["", "", "", "", "", "", "", "", ""];
-    gameOver = false;
-    currentPlayer = "X";
+    let tasks = [];
 
-    let cells = document.getElementsByClassName("cell");
+    let items = document.querySelectorAll("#taskList li");
 
-    for (let cell of cells) {
-        cell.innerHTML = "";
-    }
+    items.forEach(item => {
 
-    document.getElementById("status").innerHTML =
-        "Player X Turn";
+        let span = item.querySelector("span");
+
+        tasks.push({
+            text: span.textContent,
+            completed:
+                span.style.textDecoration === "line-through"
+        });
+    });
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 }
