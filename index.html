@@ -1,18 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>To-Do App</title>
+    <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>My To-Do List</h1>
+    <h1>Tic Tac Toe</h1>
 
-    <input type="text" id="taskInput" placeholder="Enter a task">
+    <div class="board">
+        <div class="cell" onclick="play(0)"></div>
+        <div class="cell" onclick="play(1)"></div>
+        <div class="cell" onclick="play(2)"></div>
+        <div class="cell" onclick="play(3)"></div>
+        <div class="cell" onclick="play(4)"></div>
+        <div class="cell" onclick="play(5)"></div>
+        <div class="cell" onclick="play(6)"></div>
+        <div class="cell" onclick="play(7)"></div>
+        <div class="cell" onclick="play(8)"></div>
+    </div>
 
-    <button onclick="addTask()">Add</button>
+    <h2 id="status">Player X Turn</h2>
 
-    <ul id="taskList"></ul>
+    <button onclick="restartGame()">Restart Game</button>
 
     <script src="script.js"></script>
 
