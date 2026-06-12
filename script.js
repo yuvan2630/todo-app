@@ -79,3 +79,8 @@ function saveTasks() {
 
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
+task.classList.add("fade-out");
+
+setTimeout(() => {
+    task.remove();
+}, 400);
